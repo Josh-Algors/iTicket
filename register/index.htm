@@ -14,7 +14,7 @@
     <meta name="naver-site-verification" content="">
 
 
-    <title> iNotify </title>
+    <title> iTransfer </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -55,66 +55,28 @@
 <div class="row splash-main">
 
     <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-            <h2>Sign Up</h2>
-            <span>Please fill the fields with your info.<br/>Note: For students Only</span>
+            <h2>iTransfer</h2>
+            <span>Please fill the fields with your info.<br/></span>
 
         <form action="register_user.php" autocomplete="off" id="UserRegisterForm" method="post" accept-charset="utf-8">
-          <div style="display:none;">
-            <input type="hidden" name="_method" value="POST">
-            <input type="hidden" name="key" value="6LfhxncUAAAAAFUzGEfIoy0Vz1R7K2ZyjP3CJDAu" id="Token1759140670">
-          </div>
-          <div class="form-group required">
-            <input  name="email" class="form-control" placeholder="Email" type="email" id="UserEmail" required="required" value="">
-          </div>
-                    <div class="form-group required">
-            <input  name="fname" class="form-control" placeholder="First Name" type="text" id="fname" required="required" value="">
-          </div>
-          
-              <div class="form-group required">
-            <input  name="lname" class="form-control" placeholder="Last Name" type="text" id="lname" required="required" value="">
-          </div>
-          
-          <div class="form-group required">
-            <input  name="matnum" class="form-control" placeholder="Matric Number" type="text" id="matnum" required="required" value="">
-          </div>
-
-          <div class="form-group required">
-            <select name="dept" class="form-control" id="pet-select" required>
-              <option value="">--Choose Your Department--</option>
-              <option value="Computer Technology">Computer Technology</option>
-              <option value="Food Technology">Food Technology</option>
-              <option value="Polymer & Textile">Polymer & Textile</option>
-              <option value="Hospitality Management">Hospitality Management</option>
-              <option value="Nutrition & Dietics">Nutrition & Dietics</option>
-              
-          </select>
-          </div>
-
-          <div class="form-group required">
-            <select name="lev" class="form-control" id="pet-select" required>
-              <option value="">--Choose Your Level--</option>
-              <option value="nd1">ND1</option>
-              <option value="nd2">ND2</option>
-              <option value="hnd1">HND1</option>
-              <option value="hnd2">HND2</option>
-              
-              
-          </select>
-          </div>
-          <div class="form-group PhoneNumberInput">
-            <input name="phone" class="form-control" selected="234" placeholder="234XXXXXXXXXX" required="required" maxlength="13" type="tel" id="UserPhoneNumber" value="">
+            <div style="display:none;">
+              <input type="hidden" name="_method" value="POST">
+              <input type="hidden" name="key" value="6LfhxncUAAAAAFUzGEfIoy0Vz1R7K2ZyjP3CJDAu" id="Token1759140670">
             </div>
-
-                    <div class="form-group">
-            <input name="password" class="form-control" required="required" placeholder="Password" minlength="8" maxlength="200" type="password" id="UserChangePassword" value="">
-            <div class="form-hint">Password must be at least 8 characters long.</div>
-          </div>
-          
-                    <div class="form-group required">
-            <input name="confirm_password" class="form-control" placeholder="Repeat password" minlength="8" maxlength="200" type="password" id="UserRepeatPassword" required="required" value="">
-          </div>
-             
-          <div class="clearfix"></div>
+            
+            <div class="form-group required">
+              <input  name="email" class="form-control" placeholder="Email" type="email" id="email" required="required" value="">
+            </div>
+                      <div class="form-group required">
+              <input  name="username" class="form-control" placeholder="Username" type="text" id="username" required="required" value="">
+            </div>
+            
+                <div class="form-group required">
+              <input  name="password" class="form-control" placeholder="Password" type="password" id="password" required="required" value="">
+            </div>
+  
+               
+            <div class="clearfix"></div>
     
           <p class="text-center"><a href="" class="text-warning">Lost your password?</a> | <a href="../login/index.htm" class="text-warning">Already have an account?</a></p>
 
@@ -134,22 +96,6 @@
 </div>
 
 <script type="text/javascript">
-   
-
-    var password = document.getElementById("UserChangePassword");
-    var confirmpassword = document.getElementById("UserRepeatPassword");
-
-function validatePassword(){
-    if(password.value != confirmpassword.value){
-      confirmpassword.setCustomValidity("Passwords don't match");
-    } else {
-      confirmpassword.setCustomValidity('');
-
-    }
-}
-    password.onchange = validatePassword;
-    confirmpassword.onkeyup = validatePassword;
-
 
      document.getElementById("signUpButton").disabled = false;
     function enableBtn(){

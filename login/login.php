@@ -1,43 +1,39 @@
 <?php
 extract($_POST);
 
+$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
+
 
 if(isset($_POST["btnlogin"]))
 {
     
-    
-    $conn=mysqli_connect('localhost','root','','iNotify') or die('Could not Connect My Sql:'.mysql_error());
-    $fs = mysqli_query($conn,"select * from admin where email='$email'");
-    $ss = mysqli_query($conn,"select * from admin where username='$email'");
-    if(empty($row[(mysqli_fetch_array($ss))])){
-        $value = $email;
-        $es = mysqli_query($conn,"select * from admin where email='$value' and password='$pass'");
-        if(mysqli_num_rows($es) <1 )
-	{
-		$found="N";
-	}
-	else
-	{
+    $secret = "dmjOlcsvpecxMDvx1FdiFw";
+    $email = $_POST['email'];
+    $fs = mysqli_query($conn,"select * from users where (email='$email' or username='$email')");
+
+    $data = mysqli_num_rows($fs);
+
+    if($data > 0){
+
+        // $value = $email;
+        $data = mysqli_fetch_array($fs);
+
+        $pwd_hashed = $data['password'];
+        $password = $_POST['password'];
+        $pwd_peppered = hash_hmac("sha256", $password, $secret);
         
+
+        if (password_verify($pwd_peppered, $pwd_hashed)) {
+
             session_start();
+
             $_SESSION["admin"] = "admin";
+            $_SESSION["email"] = $_POST['email'];
             header("location: ../dashboard/admin.php"); 
-	}
-    }
-    if(empty($row[(mysqli_fetch_array($fs))])){
-        $value = $email;
-        $us=mysqli_query($conn,"select * from admin where username='$value' and password='$pass'");
-        if(mysqli_num_rows($us) <1 )
-	{
-		$found="N";
-	}
-	else
-	{
-      
-            session_start();
-            $_SESSION["admin"] = "admin";
-            header("location: ../dashboard/admin.php"); 
-	}
+        }
+        else {
+            $found="N";
+        }
     }
 
 }
@@ -64,7 +60,7 @@ mysqli_close($conn);
     <meta name="naver-site-verification" content="">
 
 
-    <title> iNotify </title>
+    <title> iTransfer </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -120,22 +116,22 @@ mysqli_close($conn);
     <div class="row splash-main">
     
         <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                        <h2>Login</h2>
-                        <span>Please enter your login data <br/>Note: For Admins Only</span>
+                        <h2>iTransfer</h2>
+                        <span>Please enter your login data <br/></span>
 
             <form  action="" id="UserLoginNowForm" method="post" accept-charset="utf-8">
 	            <div style="display:none;"><input type="hidden" name="_method" value="POST">
 	            	<input type="hidden" name="key" value="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" id="Token1532892527">
 	            </div>
 	            <div class="form-group required">
-	            	<input name="email" class="form-control" placeholder="E-mail or Username" type="text" id="UserEmail" required="required">
+	            	<input name="email" class="form-control" placeholder="E-mail or Username" type="text" id="email" required="required">
 	            </div>
 	            <div class="form-group required">
-	            	<input name="pass" class="form-control" placeholder="Password" type="password" id="UserPassword" required="required">
+	            	<input name="password" class="form-control" placeholder="Password" type="password" id="password" required="required">
 	            </div>
 	            
-	            <p class="text-center"><a href="https://www.wazobiaweb.cash/?view=password_reset" class="text-warning">Lost your password?</a> |
-	            	<a href="https://www.wazobiaweb.cash/register/" class="text-warning btn btn-default">Register</a>
+	            <p class="text-center"><a href="" class="text-warning">Lost your password?</a> |
+	            	<a href="../register/index.htm" class="text-warning btn btn-default">Register</a>
 	            </p>
 
 	            <div class="form-group captcha-box">

@@ -1,119 +1,63 @@
 <?php   
-session_start();  
-require __DIR__ . '/vendor/autoload.php';
-use Twilio\Rest\Client;
+session_start();
 
-$conn=mysqli_connect('localhost','root','','iNotify') or die('Could not Connect My Sql:'.mysql_error());
+$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
 if(!isset($_SESSION["admin"])){  
-    header("location:../login/index.htm");  
-}if(isset($_SESSION["login"]) && (!isset($_SESSION["admin"]))){  
-    header("location:../dashboard/index.php");  
+    header("location: ../login/index.htm");  
 }
-if(isset($_SESSION["login"]) && (isset($_SESSION["admin"]))){  
-    header("location:../dashboard/logout.php");  
-}
-if(isset($_SESSION["admin"]) && !isset($_SESSION["login"])) {  
+if(isset($_SESSION["admin"])) {  
 
-$_SESSION["registered"]="admin";
-if(isset($_POST['sendnote'])){
-  $dept = $_POST['dept'];
-  $lev = $_POST['lev'];
-  $va = mysqli_query($conn,"select * from student WHERE `department`='$dept' AND `level`='$lev'");
-  $seatno = $_POST['seat'];
+  $email = $_SESSION['email'];
+  $va = mysqli_query($conn,"select * from users WHERE `username`='$email' or `email`='$email'");
   
-  
-  while($row = mysqli_fetch_array($va)){
-                
-    $seatvals[] = rand(1,$seatno);
-    $surnames[] = $row['matric no'];
-    }
-    sort($seatvals);
-    sort($surnames);
-    $curdate = date("Y-M-d, h:i:sa");
-    for ($y = 0; $y < mysqli_num_rows($va); $y++) {
-      $curseat = $seatvals[$y];
-      $curname = $surnames[$y];
-      $que = mysqli_query($conn,"INSERT INTO `exam`(`name`, `seat`, `date`) VALUES ('$curname','$curseat','$curdate')");
-      $examdetails = "EXAMINATION DETAILS\nCourse Code/Title: " . $_POST['course'] . "\nExamination Venue: " .$_POST['venue'].
-      "\nExamination Date and Time: " .$_POST['examtime']. "\nDuration: " .$_POST['duration']. 
-      "minutes\nDepartment: " .$_POST['dept']."\nLevel: " .$_POST['lev']. "\nExamination Seat: " .$curseat;
-     
-      $ques = mysqli_query($conn,"SELECT  `phone` FROM `student` WHERE `matric no` = '$curname'");
-      $rows = mysqli_fetch_array($ques);
-      $rowss = "+" . $rows['phone'];
+  if(mysqli_num_rows($va) < 1){
+    header("Location: ../login/login.php");
+  }
 
-      //config for mails 
-      $quest = mysqli_query($conn,"SELECT  `email` FROM `student` WHERE `matric no` = '$curname'");
-      $rowmail = mysqli_fetch_array($quest);
-      $to = $rowmail['email'];
-      $sub = "Examination Info for " .$_POST['course'];
-      $message = $examdetails;
-      $from = "From: inotify6@gmail.com";
-      mail($to,$sub,$message,$from);
+  $data = mysqli_fetch_array($va);
+
+  $username = $data['username'];
+  $email = $data['email'];
+
+// if(isset($_POST['sendmessage'])){
+//   $vals = mysqli_query($conn,"select * from student ");
+//   $message = $_POST['message'];
+//   $curdate = date("Y-M-d, h:i:sa");
+//   $que = mysqli_query($conn,"INSERT INTO `messages`(`message`,  `date`) VALUES ('$message','$curdate')");
+//     for ($y = 0; $y < mysqli_num_rows($vals); $y++) {
+//       $rowval = mysqli_fetch_array($vals);
+//       $rownum = "+" . $rowval['phone'];
+
+//       //config for mails 
+//       $to = $rowval['email'];
+//       $sub = "Important Notice!!";
+//       $message = $message;
+//       $from = "From: iTransfer6@gmail.com";
+//       mail($to,$sub,$message,$from);
           
-      // Your Account SID and Auth Token from twilio.com/console
-      $account_sid = 'AC039121e48fa58c46c42f3f97ea5bb80c';
-      $auth_token = 'ee0460591e3ed7d65746dcd9badcc0e3';
-      // In production, these should be environment variables. E.g.:
-      // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
+//       // Your Account SID and Auth Token from twilio.com/console
+//       $account_sid = 'AC039121e48fa58c46c42f3f97ea5bb80c';
+//       $auth_token = 'ee0460591e3ed7d65746dcd9badcc0e3';
+//       // In production, these should be environment variables. E.g.:
+//       // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
       
-      // A Twilio number you own with SMS capabilities
-      $twilio_number = "+12065043061";
+//       // A Twilio number 
+//       $twilio_number = "+12065043061";
       
-      $client = new Client($account_sid, $auth_token);
-      $client->messages->create(
-          // Where to send a text message (your cell phone?)
-          $rowss,
-          array(
-              'from' => $twilio_number,
-              'body' => $examdetails
-          )
-      );
+//       $client = new Client($account_sid, $auth_token);
+//       $client->messages->create(
+//           // Where to send a text message (your cell phone?)
+//           $rownum,
+//           array(
+//               'from' => $twilio_number,
+//               'body' => $message
+//           )
+//       );
 
 
-            }
-            echo '<script>alert("Info Sent!")</script>';
-
-}
-if(isset($_POST['sendmessage'])){
-  $vals = mysqli_query($conn,"select * from student ");
-  $message = $_POST['message'];
-  $curdate = date("Y-M-d, h:i:sa");
-  $que = mysqli_query($conn,"INSERT INTO `messages`(`message`,  `date`) VALUES ('$message','$curdate')");
-    for ($y = 0; $y < mysqli_num_rows($vals); $y++) {
-      $rowval = mysqli_fetch_array($vals);
-      $rownum = "+" . $rowval['phone'];
-
-      //config for mails 
-      $to = $rowval['email'];
-      $sub = "Important Notice!!";
-      $message = $message;
-      $from = "From: inotify6@gmail.com";
-      mail($to,$sub,$message,$from);
-          
-      // Your Account SID and Auth Token from twilio.com/console
-      $account_sid = 'AC039121e48fa58c46c42f3f97ea5bb80c';
-      $auth_token = 'ee0460591e3ed7d65746dcd9badcc0e3';
-      // In production, these should be environment variables. E.g.:
-      // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
-      
-      // A Twilio number 
-      $twilio_number = "+12065043061";
-      
-      $client = new Client($account_sid, $auth_token);
-      $client->messages->create(
-          // Where to send a text message (your cell phone?)
-          $rownum,
-          array(
-              'from' => $twilio_number,
-              'body' => $message
-          )
-      );
-
-
-            }
-            echo '<script>alert("Info Sent!")</script>';
-}
+//             }
+//             echo '<script>alert("Info Sent!")</script>';
+// }
 ?>
 
 
@@ -144,7 +88,7 @@ if(isset($_POST['sendmessage'])){
     <meta name="naver-site-verification" content="">
 
 
-    <title> iNotify </title>
+    <title> iTransfer </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -181,26 +125,15 @@ if(isset($_POST['sendmessage'])){
     <div class="row splash-main">
     
         <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                        <h4>Welcome, <?=$_SESSION['admin'];?>!  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<a href="logout.php">Logout</a></h4>
+                        <h4>Welcome, <?=$username;?>!  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<a href="logout.php">Logout</a></h4>
             <br/>
-                        <span>STUDENT INFO SYSTEM</span>
+                        <span>TRANSFER SYSTEM</span>
 
             <form action="" id="UserLoginNowForm" method="post" accept-charset="utf-8">
 	            <div style="display:none;"><input type="hidden" name="_method" value="POST">
                  <input type="hidden" name="key" value="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" id="Token1532892527">
 	            </div>
-              <div class="form-group required">
-            <select name="dept" class="form-control" id="pet-select" required>
-              <option value="">--Choose Your Department--</option>
-              <option value="Computer Technology">Computer Technology</option>
-              <option value="Food Technology">Food Technology</option>
-              <option value="Polymer & Textile">Polymer & Textile</option>
-              <option value="Hospitality Management">Hospitality Management</option>
-              <option value="Nutrition & Dietics">Nutrition & Dietics</option>
-              
-          </select>
-          </div>
-          <div class="form-group required">
+          <!-- <div class="form-group required">
             <select name="lev" class="form-control" id="pet-select" required>
               <option value="">--Choose Your Level--</option>
               <option value="nd1">ND1</option>
@@ -210,33 +143,33 @@ if(isset($_POST['sendmessage'])){
               
               
           </select>
-          </div>
+          </div> -->
           <div class="form-group required">
-                 <input name="course" class="form-control" placeholder="Course Code and Title" type="text" id="course" required="required">
+                 <input name="emailto" class="form-control" placeholder="Email To: " type="email" id="emailto" required="required">
 	            </div>
 
                 <div class="form-group required">
-                 <input name="examtime" class="form-control" placeholder="Exam Date" type="datetime-local" id="terminal1" required="required">
+                 <input name="emailfrom" class="form-control" placeholder="Your Email: " type="email" id="emailfrom" value=<?=$email;?> required="required" disabled>
 	            </div>
 
               <div class="form-group required">
                     
-	            	<input name="duration" class="form-control" placeholder="Exam Duration" type="text" id="duration" required="required">
+	            	<input name="title" class="form-control" placeholder="Title" type="text" id="title" required="required">
 	            </div>
 
                 <div class="form-group required">
                     
-	            	<input name="venue" class="form-control" placeholder="Exam Venue" type="text" id="venue" required="required">
+	            	<input name="message" class="form-control" placeholder="Message" type="text" id="message" required="required">
 	            </div>
               <div class="form-group required">
                     
-                    <input name="seat" class="form-control" placeholder="Hall Size" type="text" id="seat" required="required">
+                    <input name="file" class="form-control" placeholder="Upload File" type="file" id="file" required="required">
                   </div>
 	            
 	            <div class="form-group captcha-box">
 	                                                <!--<div class="g-recaptcha" data-sitekey="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" data-callback="enableBtn"></div>--> 
                                                     <div class="submit">
-		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="sendnote" id="signInButton1" type="submit" value="Send Notfication!" disabled="">
+		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="sendnote" id="signInButton1" type="submit" value="Transfer Now!" disabled="">
 		            	</div>
                         
                        
@@ -248,17 +181,7 @@ if(isset($_POST['sendmessage'])){
 		        </div>
             </form>
 <br/>
-            <form method="post" action="">
-           
-            <div class="form-group required">
-                    
-                    <textarea rows="5" cols="40" name="message" class="form-control" placeholder="Send Message" type="text" id="message" required="required"></textarea>
-                  </div>
-    
-<div class="submit">
-		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="sendmessage" id="signInButton2" type="submit" value="Send Message" disabled="">
-		            	</div>
-</form>
+
             <form method="post" action="registered.php">
             <div class="submit">
 		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="viewreg" id="signInButton" type="submit" value="View Registered Students" disabled="">
@@ -291,6 +214,6 @@ if(isset($_POST['sendmessage'])){
 </body>
 </html>
 <?php
-$conn=mysqli_connect('localhost','root','','iNotify') or die('Could not Connect My Sql:'.mysql_error());
+$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
 mysqli_close($conn);}
 ?>
