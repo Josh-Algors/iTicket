@@ -1,5 +1,6 @@
 <?php   
 session_start();
+date_default_timezone_set("Africa/Lagos");
 
 $conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
 if(!isset($_SESSION["admin"])){  
@@ -18,8 +19,58 @@ if(isset($_SESSION["admin"])) {
 
   $username = $data['username'];
   $email = $data['email'];
+  $user_id = $data['id'];
+  echo $_SERVER['HTTP_HOST'];
+  if(isset($_POST['transfer'])){
 
-// if(isset($_POST['sendmessage'])){
+    function generateRandomString($length = 10) {
+      $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      $charactersLength = strlen($characters);
+      $randomString = '';
+      for ($i = 0; $i < $length; $i++) {
+          $randomString .= $characters[rand(0, $charactersLength - 1)];
+      }
+      return $randomString;
+    }
+  
+    // echo generateRandomString();
+
+    $secret = "dmjOlcsvpecxMDvx1FdiFw";
+
+    $pwd_secret = hash_hmac("sha256", $_POST['password'], $secret);
+    $pwd_hashed = password_hash($pwd_secret, PASSWORD_DEFAULT);
+    $expires_at = date("Y-m-d H:i:sa", strtotime('+'.$_POST['expires'].' days'));
+
+
+    $file_name = $_FILES['file']['name'];
+    $file_type = $_FILES['file']['type'];
+    $file_size = $_FILES['file']['size'];
+    $file_tmp = $_FILES['file']['tmp_name'];
+  
+    // Move the uploaded file to a desired location
+    move_uploaded_file($file_tmp, "../uploads/$file_name"); 
+
+    $email_to = $_POST['emailto'];
+    $title = $_POST['title'];
+    $message = $_POST['message'];
+    $send_type = $_POST['sendtype'];
+    $expires_at = date("Y-m-d H:i:sa", strtotime('+'.$_POST['expires'].' days'));
+    $password = $pwd_hashed;
+    $status = "0";
+    $link = generateRandomString();
+
+    $query="INSERT INTO `transfers`(`user_id`, `email_to`, `email_from`, `title`, `message`, `send_type`, `file_name`, `file_type`, `file_size`, `expires_at`, `password`, `link`, `status`) 
+    VALUES('$user_id', '$email_to', '$email', '$title', '$message', '$send_type', '$file_name', '$file_type', '$file_size', '$expires_at', '$password', '$link', '$status')";
+
+    // $query = 'SELECT * FROM users';
+    $result = mysqli_query($conn, $query);
+
+    // var_dump($result);
+    $download_link = "http://localhost/itransfer?download_link=".$link;
+    echo '<script> alert("File sent successfully!\n") </script>';
+  
+  }
+// if(isset($_POST['transfer'])){
 //   $vals = mysqli_query($conn,"select * from student ");
 //   $message = $_POST['message'];
 //   $curdate = date("Y-M-d, h:i:sa");
@@ -125,11 +176,11 @@ if(isset($_SESSION["admin"])) {
     <div class="row splash-main">
     
         <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                        <h4>Welcome, <?=$username;?>!  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<a href="logout.php">Logout</a></h4>
+                        <h4>Welcome, <?=$username;?>!  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<a href="logout.php">Logout</a></h4>
             <br/>
                         <span>TRANSFER SYSTEM</span>
 
-            <form action="" id="UserLoginNowForm" method="post" accept-charset="utf-8">
+            <form action="" id="UserLoginNowForm" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 	            <div style="display:none;"><input type="hidden" name="_method" value="POST">
                  <input type="hidden" name="key" value="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" id="Token1532892527">
 	            </div>
@@ -145,11 +196,11 @@ if(isset($_SESSION["admin"])) {
           </select>
           </div> -->
           <div class="form-group required">
-                 <input name="emailto" class="form-control" placeholder="Email To: " type="email" id="emailto" required="required">
+                 <input name="emailto" class="form-control" placeholder="Email To: " type="email" id="emailto" required>
 	            </div>
 
                 <div class="form-group required">
-                 <input name="emailfrom" class="form-control" placeholder="Your Email: " type="email" id="emailfrom" value=<?=$email;?> required="required" disabled>
+                 <input name="emailfrom" class="form-control" placeholder="Your Email: " type="email" id="emailfrom" value=<?=$email;?> required disabled>
 	            </div>
 
               <div class="form-group required">
@@ -161,15 +212,39 @@ if(isset($_SESSION["admin"])) {
                     
 	            	<input name="message" class="form-control" placeholder="Message" type="text" id="message" required="required">
 	            </div>
+
+               <div>
+                  <input onclick="javascript:hideInputs();" type="radio" id="sendEmailOption" name="sendtype" value="mail" checked>
+                  <label for="sendEmailOption">Send Email Link</label>
+                  <br/>
+                  <input onclick="javascript:hideInputs();" type="radio" id="getTransferLinkOption" name="sendtype" value="link">
+                  <label for="getTransferLinkOption">Get Transfer Link</label>
+               </div>
+               <br/>
               <div class="form-group required">
                     
                     <input name="file" class="form-control" placeholder="Upload File" type="file" id="file" required="required">
                   </div>
 	            
+                  <div class="form-group required">
+                    
+	            	<input name="expires" class="form-control" placeholder="expiration (in days)" type="text" id="expires" required="required">
+	            </div>
+
+              <div>
+                  <input onclick="javascript:hidePassword();" type="checkbox" id="setpassword" name="setpassword" value="30" checked>
+                  <label for="setpassword">Set Password</label>
+                  <br/>
+               </div>
+
+              <div class="form-group required">
+                    
+	            	<input name="password" class="form-control" placeholder="Enter Password" type="text" id="password" required>
+	            </div>
 	            <div class="form-group captcha-box">
 	                                                <!--<div class="g-recaptcha" data-sitekey="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" data-callback="enableBtn"></div>--> 
                                                     <div class="submit">
-		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="sendnote" id="signInButton1" type="submit" value="Transfer Now!" disabled="">
+		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="transfer" id="signInButton1" type="submit" value="Transfer Now!" disabled="">
 		            	</div>
                         
                        
@@ -184,7 +259,7 @@ if(isset($_SESSION["admin"])) {
 
             <form method="post" action="registered.php">
             <div class="submit">
-		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="viewreg" id="signInButton" type="submit" value="View Registered Students" disabled="">
+		            		<input class="btn btn-primary" style="color:#ffffff; text-align:center;" name="viewreg" id="signInButton" type="submit" value="View Transfer History" disabled="">
 		            	</div>
 </form>
 
@@ -200,6 +275,7 @@ if(isset($_SESSION["admin"])) {
 
       document.getElementById("signInButton1").disabled = false;
             function enableBtn(){
+              
         document.getElementById("signInButton1").disabled = false;
       }
       document.getElementById("signInButton2").disabled = false;
@@ -207,6 +283,33 @@ if(isset($_SESSION["admin"])) {
         document.getElementById("signInButton2").disabled = false;
       }
 
+
+      //radio
+      function hideInputs(){
+      if (document.getElementById('sendEmailOption').checked) {
+        document.getElementById('emailto').style.display = 'block';
+        document.getElementById('emailfrom').style.display = 'block';
+
+      }
+      else {
+        document.getElementById('emailto').style.display = 'none';
+        document.getElementById('emailfrom').style.display = 'none';
+        $("#emailto").prop('required', false);
+        $("#emailfrom").prop('required', false);
+        }
+      }
+
+      function hidePassword()
+      {
+        if (document.getElementById('setpassword').checked) {
+        document.getElementById('password').style.display = 'block';
+      }
+      else {
+        document.getElementById('password').style.display = 'none';
+        $("#password").prop('required', false);
+        }
+
+      }
 
     </script>
 
