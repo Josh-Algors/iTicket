@@ -52,6 +52,13 @@ if(isset($_SESSION['login'])){
         <meta property="og:image" content="img/yaba.png">
 
 <link href="css/widget.css" rel="stylesheet">
+
+<style>
+    body 
+    {
+        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODkzNGI1NjBjNDUwNzA2MmM1YjlhMTU0NGQwMjVhNDFmNGFjMzA3ZiZjdD1n/W6cs6H6vVaPmmJp100/giphy-downsized-large.gif")
+    }
+</style>
 </head>
 
 <body id="gm-home">

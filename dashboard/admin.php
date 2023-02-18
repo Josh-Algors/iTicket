@@ -1,4 +1,9 @@
-<?php   
+<?php 
+require_once '../vendor/autoload.php';
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+
 session_start();
 date_default_timezone_set("Africa/Lagos");
 
@@ -20,17 +25,36 @@ if(isset($_SESSION["admin"])) {
   $username = $data['username'];
   $email = $data['email'];
   $user_id = $data['id'];
-  echo $_SERVER['HTTP_HOST'];
+  // echo $_SERVER['HTTP_HOST'];
   if(isset($_POST['transfer'])){
 
-    function generateRandomString($length = 10) {
+    function generateRandomString($length = 10) 
+    {
+
       $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
       $charactersLength = strlen($characters);
       $randomString = '';
+
       for ($i = 0; $i < $length; $i++) {
           $randomString .= $characters[rand(0, $charactersLength - 1)];
       }
+
       return $randomString;
+
+    }
+
+    function generateRand($length = 6) {
+
+      $characters = '0123456789';
+      $charactersLength = strlen($characters);
+      $randomString = '';
+
+      for ($i = 0; $i < $length; $i++) {
+          $randomString .= $characters[rand(0, $charactersLength - 1)];
+      }
+
+      return $randomString;
+
     }
   
     // echo generateRandomString();
@@ -42,15 +66,17 @@ if(isset($_SESSION["admin"])) {
     $expires_at = date("Y-m-d H:i:sa", strtotime('+'.$_POST['expires'].' days'));
 
 
-    $file_name = $_FILES['file']['name'];
+    $rand_num = generateRand();
+    $fls = explode(".", $_FILES['file']['name']);
+    $file_names = trim(current($fls) . $rand_num . "." . end($fls), "'");
+    $file_name = str_replace( array('"', ',' , ';', '<', '>', '\''), '', $file_names);
     $file_type = $_FILES['file']['type'];
-    $file_size = $_FILES['file']['size'];
+    $file_size = strval($_FILES['file']['size']);
     $file_tmp = $_FILES['file']['tmp_name'];
   
-    // Move the uploaded file to a desired location
-    move_uploaded_file($file_tmp, "../uploads/$file_name"); 
 
     $email_to = $_POST['emailto'];
+    $email_from = $_POST['emailfrom'];
     $title = $_POST['title'];
     $message = $_POST['message'];
     $send_type = $_POST['sendtype'];
@@ -58,16 +84,51 @@ if(isset($_SESSION["admin"])) {
     $password = $pwd_hashed;
     $status = "0";
     $link = generateRandomString();
+    $download_link = "Kindly click this link to download the file - " . "http://localhost/itransfer?download_link=" . $link;
+  
 
-    $query="INSERT INTO `transfers`(`user_id`, `email_to`, `email_from`, `title`, `message`, `send_type`, `file_name`, `file_type`, `file_size`, `expires_at`, `password`, `link`, `status`) 
-    VALUES('$user_id', '$email_to', '$email', '$title', '$message', '$send_type', '$file_name', '$file_type', '$file_size', '$expires_at', '$password', '$link', '$status')";
+    echo $file_name;
 
-    // $query = 'SELECT * FROM users';
-    $result = mysqli_query($conn, $query);
+    $transport = Transport::fromDsn('smtp://olukoyajoshua72@gmail.com:etibmllkylyvdlbh@smtp.gmail.com:587');
+    // Create a Mailer object 
+    $mailer = new Mailer($transport); 
+    // Create an Email object 
+    $emaill = (new Email());
+    // Set the "From address" 
+    $emaill->from($email_from);
+    // Set the "From address" 
+    $emaill->to($_POST['emailto']);
+    // Set a "subject" 
+    $emaill->subject('iTransfer - ' . $_POST['title']);
+    // Set the plain-text "Body" 
+    $mssg = $_POST['message'];
+    $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $download_link . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
+    $emaill->text($msg);
+
+    // Send the message 
+    $mailer->send($emaill);
+
+
+    if($file_name && $file_type && $file_size && $file_tmp)
+    {
+      $query="INSERT INTO `transfers`(`user_id`, `email_to`, `email_from`, `title`, `message`, `send_type`, `file_name`, `file_type`, `file_size`, `expires_at`, `password`, `link`, `status`) 
+      VALUES('$user_id', '$email_to', '$email', '$title', '$message', '$send_type', '$file_name', '$file_type', '$file_size', '$expires_at', '$password', '$link', '$status')";
+
+      // $query = 'SELECT * FROM users';
+      $result = mysqli_query($conn, $query);
+    }
+
+    if($result)
+    {
+      // Move the uploaded file to a desired location
+      move_uploaded_file($file_tmp, "../uploads/$file_name"); 
+    }
+
+
+    echo $result;
 
     // var_dump($result);
-    $download_link = "http://localhost/itransfer?download_link=".$link;
-    echo '<script> alert("File sent successfully!\n") </script>';
+    echo "<script> alert('$download_link') </script>";
   
   }
 // if(isset($_POST['transfer'])){
@@ -164,7 +225,12 @@ if(isset($_SESSION["admin"])) {
             <meta property="og:url" content="">
         <meta property="og:image" content="../yaba.png">
 
-<link href="css/widget.css" rel="stylesheet">
+<style>
+    body 
+    {
+        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODkzNGI1NjBjNDUwNzA2MmM1YjlhMTU0NGQwMjVhNDFmNGFjMzA3ZiZjdD1n/W6cs6H6vVaPmmJp100/giphy-downsized-large.gif")
+    }
+</style>
 </head>
 
 <body >
