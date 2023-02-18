@@ -89,7 +89,7 @@ if(isset($_SESSION["admin"])) {
 
     echo $file_name;
 
-    $transport = Transport::fromDsn('smtp://olukoyajoshua72@gmail.com:etibmllkylyvdlbh@smtp.gmail.com:587');
+    $transport = Transport::fromDsn('smtp://email:password@smtp.gmail.com:587');
     // Create a Mailer object 
     $mailer = new Mailer($transport); 
     // Create an Email object 
