@@ -91,7 +91,6 @@ if(isset($_SESSION["admin"])) {
 
     if($clicked == "mail")
     {
-      $email_from = $_POST['emailfrom'];
 
       $transport = Transport::fromDsn('smtp://ife.illustrator@gmail.com:vyfwtjfdhibjuvyc@smtp.gmail.com:587');
       // Create a Mailer object 
@@ -99,7 +98,7 @@ if(isset($_SESSION["admin"])) {
       // Create an Email object 
       $emaill = (new Email());
       // Set the "From address" 
-      $emaill->from($email_from);
+      $emaill->from($email);
       // Set the "From address" 
       $emaill->to($_POST['emailto']);
       // Set a "subject" 
