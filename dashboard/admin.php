@@ -75,7 +75,6 @@ if(isset($_SESSION["admin"])) {
   
 
     $email_to = $_POST['emailto'];
-    $email_from = $_POST['emailfrom'];
     $title = $_POST['title'];
     $message = $_POST['message'];
     $send_type = $_POST['sendtype'];
@@ -86,26 +85,33 @@ if(isset($_SESSION["admin"])) {
     $download_link = "Kindly click this link to download the file - " . "http://localhost/itransfer?download_link=" . $link;
   
 
+
     // echo $file_name;
+    $clicked = $_POST['sendtype'];
 
-    $transport = Transport::fromDsn('smtp://email:password@smtp.gmail.com:587');
-    // Create a Mailer object 
-    $mailer = new Mailer($transport); 
-    // Create an Email object 
-    $emaill = (new Email());
-    // Set the "From address" 
-    $emaill->from($email_from);
-    // Set the "From address" 
-    $emaill->to($_POST['emailto']);
-    // Set a "subject" 
-    $emaill->subject('iTransfer - ' . $_POST['title']);
-    // Set the plain-text "Body" 
-    $mssg = $_POST['message'];
-    $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $download_link . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
-    $emaill->text($msg);
+    if($clicked == "mail")
+    {
+      $email_from = $_POST['emailfrom'];
+      
+      $transport = Transport::fromDsn('smtp://email:password@smtp.gmail.com:587');
+      // Create a Mailer object 
+      $mailer = new Mailer($transport); 
+      // Create an Email object 
+      $emaill = (new Email());
+      // Set the "From address" 
+      $emaill->from($email_from);
+      // Set the "From address" 
+      $emaill->to($_POST['emailto']);
+      // Set a "subject" 
+      $emaill->subject('iTransfer - ' . $_POST['title']);
+      // Set the plain-text "Body" 
+      $mssg = $_POST['message'];
+      $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $download_link . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
+      $emaill->text($msg);
 
-    // Send the message 
-    $mailer->send($emaill);
+      // Send the message 
+      $mailer->send($emaill);
+    }
 
 
     if($file_name && $file_type && $file_size && $file_tmp)
