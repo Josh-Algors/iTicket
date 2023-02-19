@@ -10,7 +10,8 @@ if($_GET['download_link'])
 
     $data = mysqli_num_rows($validate_link);
 
-    if($data > 0){
+    if($data > 0)
+    {
 
         $info = mysqli_fetch_array($validate_link);
 

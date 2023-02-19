@@ -13,7 +13,8 @@ if(isset($_POST["btnlogin"]))
 
     $data = mysqli_num_rows($fs);
 
-    if($data > 0){
+    if($data > 0)
+    {
 
         // $value = $email;
         $data = mysqli_fetch_array($fs);
@@ -23,7 +24,8 @@ if(isset($_POST["btnlogin"]))
         $pwd_peppered = hash_hmac("sha256", $password, $secret);
         
 
-        if (password_verify($pwd_peppered, $pwd_hashed)) {
+        if (password_verify($pwd_peppered, $pwd_hashed))
+        {
 
             session_start();
 
@@ -31,7 +33,8 @@ if(isset($_POST["btnlogin"]))
             $_SESSION["email"] = $_POST['email'];
             header("location: ../dashboard/admin.php"); 
         }
-        else {
+        else
+        {
             $found="N";
         }
     }

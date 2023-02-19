@@ -1,16 +1,18 @@
 <?php
 extract($_POST);
-if(empty($_POST['email'])) {  
+if(empty($_POST['email']))
+{  
      
     header("location: ../register/index.htm");  
 }
 
-if(!empty($_POST['email'])) {
+if(!empty($_POST['email']))
+{
 $conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
 $rs=mysqli_query($conn,"select * from users WHERE `email`='$email' or `username`='$username'");
 
-if (mysqli_num_rows($rs)>0)
-{
+  if (mysqli_num_rows($rs)>0)
+  {
 ?>
 <!DOCTYPE html>
 
