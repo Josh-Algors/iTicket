@@ -30,31 +30,30 @@ if(isset($_SESSION["admin"])) {
 
     function generateRandomString($length = 10) 
     {
-
       $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
       $charactersLength = strlen($characters);
       $randomString = '';
 
-      for ($i = 0; $i < $length; $i++) {
-          $randomString .= $characters[rand(0, $charactersLength - 1)];
+      for ($i = 0; $i < $length; $i++)
+      {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
       }
 
       return $randomString;
-
     }
 
-    function generateRand($length = 6) {
-
+    function generateRand($length = 6)
+    {
       $characters = '0123456789';
       $charactersLength = strlen($characters);
       $randomString = '';
 
-      for ($i = 0; $i < $length; $i++) {
+      for ($i = 0; $i < $length; $i++)
+      {
           $randomString .= $characters[rand(0, $charactersLength - 1)];
       }
 
       return $randomString;
-
     }
   
     // echo generateRandomString();
@@ -87,7 +86,7 @@ if(isset($_SESSION["admin"])) {
     $download_link = "Kindly click this link to download the file - " . "http://localhost/itransfer?download_link=" . $link;
   
 
-    echo $file_name;
+    // echo $file_name;
 
     $transport = Transport::fromDsn('smtp://email:password@smtp.gmail.com:587');
     // Create a Mailer object 
@@ -131,45 +130,7 @@ if(isset($_SESSION["admin"])) {
     echo "<script> alert('$download_link') </script>";
   
   }
-// if(isset($_POST['transfer'])){
-//   $vals = mysqli_query($conn,"select * from student ");
-//   $message = $_POST['message'];
-//   $curdate = date("Y-M-d, h:i:sa");
-//   $que = mysqli_query($conn,"INSERT INTO `messages`(`message`,  `date`) VALUES ('$message','$curdate')");
-//     for ($y = 0; $y < mysqli_num_rows($vals); $y++) {
-//       $rowval = mysqli_fetch_array($vals);
-//       $rownum = "+" . $rowval['phone'];
 
-//       //config for mails 
-//       $to = $rowval['email'];
-//       $sub = "Important Notice!!";
-//       $message = $message;
-//       $from = "From: iTransfer6@gmail.com";
-//       mail($to,$sub,$message,$from);
-          
-//       // Your Account SID and Auth Token from twilio.com/console
-//       $account_sid = 'AC039121e48fa58c46c42f3f97ea5bb80c';
-//       $auth_token = 'ee0460591e3ed7d65746dcd9badcc0e3';
-//       // In production, these should be environment variables. E.g.:
-//       // $auth_token = $_ENV["TWILIO_AUTH_TOKEN"]
-      
-//       // A Twilio number 
-//       $twilio_number = "+12065043061";
-      
-//       $client = new Client($account_sid, $auth_token);
-//       $client->messages->create(
-//           // Where to send a text message (your cell phone?)
-//           $rownum,
-//           array(
-//               'from' => $twilio_number,
-//               'body' => $message
-//           )
-//       );
-
-
-//             }
-//             echo '<script>alert("Info Sent!")</script>';
-// }
 ?>
 
 
@@ -383,6 +344,6 @@ if(isset($_SESSION["admin"])) {
 </body>
 </html>
 <?php
-$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
-mysqli_close($conn);}
+    $conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
+    mysqli_close($conn);}
 ?>

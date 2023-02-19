@@ -55,14 +55,6 @@ if(isset($_POST['download']))
             flush();
             readfile($file_path);
             exit();
-
-            // echo "success";
-            // echo basename($file);
-            // session_start();
-
-            // $_SESSION["admin"] = "admin";
-            // $_SESSION["email"] = $_POST['email'];
-            // header("location: ../dashboard/admin.php"); 
         }
         else
         {
@@ -235,7 +227,6 @@ if(isset($_POST['download']))
 </body>
 </html>
 <?php
-$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
-mysqli_close($conn);
-
+    $conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
+    mysqli_close($conn);
 ?>
