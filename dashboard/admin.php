@@ -125,7 +125,13 @@ if(isset($_SESSION["admin"])) {
     if($result)
     {
       // Move the uploaded file to a desired location
-      move_uploaded_file($file_tmp, "../uploads/$file_name"); 
+      try
+      {
+        move_uploaded_file($file_tmp, "../uploads/$file_name"); 
+      }
+      catch(\Throwable $e)
+      {}
+      
     }
 
 
