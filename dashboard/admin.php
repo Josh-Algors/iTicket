@@ -4,6 +4,9 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 
+use Cloudinary\Cloudinary;
+use Cloudinary\Transformation\Resize;
+
 session_start();
 date_default_timezone_set("Africa/Lagos");
 
@@ -26,7 +29,8 @@ if(isset($_SESSION["admin"])) {
   $email = $data['email'];
   $user_id = $data['id'];
   // echo $_SERVER['HTTP_HOST'];
-  if(isset($_POST['transfer'])){
+  if(isset($_POST['transfer']))
+  {
 
     function generateRandomString($length = 10) 
     {
@@ -54,6 +58,27 @@ if(isset($_SESSION["admin"])) {
       }
 
       return $randomString;
+    }
+
+    function uploadFile($new_file, $new_file_name)
+    {
+      $cloudinary = new Cloudinary(
+        [
+            'cloud' => [
+                'cloud_name' => 'dl8ag4o2o',
+                'api_key'    => '323657171869593',
+                'api_secret' => '7JGLVoQVVQB97Qcb8mXG0hbVbec',
+            ],
+        ]
+    );
+    
+    $real_path = realpath($new_file);
+    $output = $cloudinary->uploadApi()->upload(
+        $real_path,
+        ["resource_type" => "raw"]
+    );
+    
+    return $output['secure_url'];
     }
   
     // echo generateRandomString();
@@ -89,30 +114,6 @@ if(isset($_SESSION["admin"])) {
     // echo $file_name;
     $clicked = $_POST['sendtype'];
 
-    if($clicked == "mail")
-    {
-
-      $transport = Transport::fromDsn('smtp://ife.illustrator@gmail.com:vyfwtjfdhibjuvyc@smtp.gmail.com:587');
-      // Create a Mailer object 
-      $mailer = new Mailer($transport); 
-      // Create an Email object 
-      $emaill = (new Email());
-      // Set the "From address" 
-      $emaill->from($email);
-      // Set the "From address" 
-      $emaill->to($_POST['emailto']);
-      // Set a "subject" 
-      $emaill->subject('iTransfer - ' . $_POST['title']);
-      // Set the plain-text "Body" 
-      $mssg = $_POST['message'];
-      $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $download_link . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
-      $emaill->text($msg);
-
-      // Send the message 
-      $mailer->send($emaill);
-    }
-
-
     if($file_name && $file_type && $file_size && $file_tmp)
     {
       $query="INSERT INTO `transfers`(`user_id`, `email_to`, `email_from`, `title`, `message`, `send_type`, `file_name`, `file_type`, `file_size`, `expires_at`, `password`, `link`, `status`) 
@@ -127,18 +128,50 @@ if(isset($_SESSION["admin"])) {
       // Move the uploaded file to a desired location
       try
       {
-        move_uploaded_file($file_tmp, "../uploads/$file_name"); 
+        $mov_file = "../uploads/$file_name";
+        move_uploaded_file($file_tmp, $mov_file); 
+
+        $cloud_func = uploadFile($mov_file, $file_name);
+
+        $query= "UPDATE `transfers` SET `url` = '$cloud_func' WHERE `link` = '$link'";
+
+        // -- //$query = 'SELECT * FROM users';
+        $result = mysqli_query($conn, $query);
       }
       catch(\Throwable $e)
       {}
       
+
+      if($clicked == "mail")
+      {
+
+        $transport = Transport::fromDsn('smtp://ife.illustrator@gmail.com:vyfwtjfdhibjuvyc@smtp.gmail.com:587');
+        // Create a Mailer object 
+        $mailer = new Mailer($transport); 
+        // Create an Email object 
+        $emaill = (new Email());
+        // Set the "From address" 
+        $emaill->from($email);
+        // Set the "From address" 
+        $emaill->to($_POST['emailto']);
+        // Set a "subject" 
+        $emaill->subject('iTransfer - ' . $_POST['title']);
+        // Set the plain-text "Body" 
+        $mssg = $_POST['message'];
+        $links = "http://localhost/itransfer?download_link=" . $link;
+        $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $links . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
+        $emaill->text($msg);
+
+        // Send the message 
+        $mailer->send($emaill);
+      }
+      else
+      {
+        echo "<script> alert('$download_link') </script>";
+      }
+
     }
 
-
-    echo $result;
-
-    // var_dump($result);
-    echo "<script> alert('$download_link') </script>";
   
   }
 

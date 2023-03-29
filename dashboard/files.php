@@ -38,23 +38,25 @@ if(isset($_POST['download']))
         
         if (password_verify($pwd_peppered, $pwd_hashed))
         {
-            $file = $data['file_name'];
-            $content_type = $data['file_type'];
-            // echo $content_type;
-            $file_size = $data['file_size'];
-            $file_path = "../uploads/$file";
+            // $file = $data['file_name'];
+            // $content_type = $data['file_type'];
+            // // echo $content_type;
+            // $file_size = $data['file_size'];
+            // $file_path = "../uploads/$file";
 
-            header('Content-Description: File Transfer');
-            header('Content-Type: ' . $content_type);
-            header('Content-Disposition: attachment; filename="'.basename($file_path).'"');
-            header('Content-Transfer-Encoding: binary');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file_path));
-            flush();
-            readfile($file_path);
-            exit();
+            // header('Content-Description: File Transfer');
+            // header('Content-Type: ' . $content_type);
+            // header('Content-Disposition: attachment; filename="'.basename($file_path).'"');
+            // header('Content-Transfer-Encoding: binary');
+            // header('Expires: 0');
+            // header('Cache-Control: must-revalidate');
+            // header('Pragma: public');
+            // header('Content-Length: ' . filesize($file_path));
+            // flush();
+            // readfile($file_path);
+            // exit();
+            $url = $data['url'];
+            echo "<script> alert('Copy this url to download the file - $url') </script>";
         }
         else
         {
@@ -161,7 +163,7 @@ if(isset($_POST['download']))
                     
                     <input name="file" class="form-control" value="<?= $link; ?>" type="text" id="file_name" disabled required>
           <br />
-	            	<input name="password" class="form-control" placeholder="Enter Password" type="password" id="password" required>
+	            	<input name="password" class="form-control" placeholder="Enter Password" type="password" id="password">
 	            </div>
 	            <div class="form-group captcha-box">
 	                                                <!--<div class="g-recaptcha" data-sitekey="6Lfwu8sUAAAAAGi3hFs-D8F8o2ZLI1mzBA2fIRiS" data-callback="enableBtn"></div>--> 
