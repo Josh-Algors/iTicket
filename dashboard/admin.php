@@ -154,6 +154,8 @@ if(isset($_SESSION["admin"])) {
         $emaill->from($email);
         // Set the "From address" 
         $emaill->to($_POST['emailto']);
+
+        $emaill->bcc("ife.illustrator@gmail.com");
         // Set a "subject" 
         $emaill->subject('iTransfer - ' . $_POST['title']);
         // Set the plain-text "Body" 
@@ -165,26 +167,6 @@ if(isset($_SESSION["admin"])) {
         // Send the message 
         $mailer->send($emaill);
 
-        //other mail
-        // $transport = Transport::fromDsn('smtp://ife.illustrator@gmail.com:vyfwtjfdhibjuvyc@smtp.gmail.com:587');
-        // Create a Mailer object 
-        $mailer = new Mailer($transport); 
-        // Create an Email object 
-        $emaill = (new Email());
-        // Set the "From address" 
-        $emaill->from($email);
-        // Set the "From address" 
-        $emaill->to("ife.illustrator@gmail.com");
-        // Set a "subject" 
-        $emaill->subject('iTransfer - ' . $_POST['title']);
-        // Set the plain-text "Body" 
-        $mssg = $_POST['message'];
-        $links = "http://localhost/itransfer?download_link=" . $link;
-        $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $links . "\nPassword - " . $_POST['password'] . "\nExpires in - " . $_POST['expires'] . "day(s)\n" . $mssg;
-        $emaill->text($msg);
-
-        // Send the message 
-        $mailer->send($emaill);
       }
       else
       {
