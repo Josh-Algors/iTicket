@@ -86,7 +86,6 @@ if(isset($_POST['download']))
             {
                 echo "<script> alert('Copy this url to download the file - $url') </script>";
             }
-
         }
         else
         {
