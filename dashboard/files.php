@@ -42,6 +42,7 @@ if(isset($_POST['download']))
         
         if (password_verify($pwd_peppered, $pwd_hashed))
         {
+            $url = $data['url'];
             // $file = $data['file_name'];
             // $content_type = $data['file_type'];
             // // echo $content_type;
@@ -75,7 +76,7 @@ if(isset($_POST['download']))
                 $emaill->subject('iTransfer - ' . $data['title']);
                 // Set the plain-text "Body" 
                 $mssg = $data['message'];
-                $links = "http://localhost/itransfer?download_link=" . $link;
+                $links = "http://localhost/itransfer?download_link=" . $url;
                 $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $links . "\n" . $mssg;
                 $emaill->text($msg);
 
@@ -84,7 +85,6 @@ if(isset($_POST['download']))
             }
             else
             {
-                $url = $data['url'];
                 echo "<script> alert('Copy this url to download the file - $url') </script>";
             }
 
