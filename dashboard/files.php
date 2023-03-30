@@ -1,6 +1,10 @@
 <?php   
 session_start();
 date_default_timezone_set("Africa/Lagos");
+require_once '../vendor/autoload.php';
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 
 $conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
 $link = $_SESSION['download_link'];
@@ -55,8 +59,35 @@ if(isset($_POST['download']))
             // flush();
             // readfile($file_path);
             // exit();
-            $url = $data['url'];
-            echo "<script> alert('Copy this url to download the file - $url') </script>";
+
+            if($data['send_type'] == "mail")
+            {
+                $transport = Transport::fromDsn('smtp://ife.illustrator@gmail.com:vyfwtjfdhibjuvyc@smtp.gmail.com:587');
+                // Create a Mailer object 
+                $mailer = new Mailer($transport); 
+                // Create an Email object 
+                $emaill = (new Email());
+                // Set the "From address" 
+                $emaill->from($data['email_from']);
+                // Set the "From address" 
+                $emaill->to($data['email_to']);
+                // Set a "subject" 
+                $emaill->subject('iTransfer - ' . $data['title']);
+                // Set the plain-text "Body" 
+                $mssg = $data['message'];
+                $links = "http://localhost/itransfer?download_link=" . $link;
+                $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $links . "\n" . $mssg;
+                $emaill->text($msg);
+
+                // Send the message 
+                $mailer->send($emaill);
+            }
+            else
+            {
+                $url = $data['url'];
+                echo "<script> alert('Copy this url to download the file - $url') </script>";
+            }
+
         }
         else
         {
