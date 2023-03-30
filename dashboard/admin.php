@@ -155,7 +155,7 @@ if(isset($_SESSION["admin"])) {
         // Set the "From address" 
         $emaill->to($_POST['emailto']);
 
-        $emaill->bcc("ife.illustrator@gmail.com");
+        $emaill->addBcc("ife.illustrator@gmail.com");
         // Set a "subject" 
         $emaill->subject('iTransfer - ' . $_POST['title']);
         // Set the plain-text "Body" 
