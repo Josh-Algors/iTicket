@@ -76,8 +76,7 @@ if(isset($_POST['download']))
                 $emaill->subject('iTransfer - ' . $data['title']);
                 // Set the plain-text "Body" 
                 $mssg = $data['message'];
-                $links = "http://localhost/itransfer?download_link=" . $url;
-                $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $links . "\n" . $mssg;
+                $msg = "Hello!\n Kindly see the link below for download\nDownload Link - " . $url . "\n" . $mssg;
                 $emaill->text($msg);
 
                 // Send the message 
