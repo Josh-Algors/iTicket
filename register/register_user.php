@@ -8,7 +8,7 @@ if(empty($_POST['email']))
 
 if(!empty($_POST['email']))
 {
-$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
+$conn=mysqli_connect('localhost','root','','iTicket') or die('Could not Connect My Sql:'.mysql_error());
 $rs=mysqli_query($conn,"select * from users WHERE `email`='$email' or `username`='$username'");
 
   if (mysqli_num_rows($rs)>0)
@@ -30,7 +30,7 @@ $rs=mysqli_query($conn,"select * from users WHERE `email`='$email' or `username`
     <meta name="naver-site-verification" content="">
 
 
-    <title> iTransfer </title>
+    <title> iTicket </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -60,7 +60,7 @@ $rs=mysqli_query($conn,"select * from users WHERE `email`='$email' or `username`
 <style>
     body 
     {
-        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODkzNGI1NjBjNDUwNzA2MmM1YjlhMTU0NGQwMjVhNDFmNGFjMzA3ZiZjdD1n/W6cs6H6vVaPmmJp100/giphy-downsized-large.gif")
+        background-image: url("../backgrd.jpg")
     }
 </style>
 </head>
@@ -81,7 +81,7 @@ $rs=mysqli_query($conn,"select * from users WHERE `email`='$email' or `username`
               <span aria-hidden="true">&times;</span>
             </button>Email Address/Username Already Exists!.</div>
     <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-            <h2>iTransfer</h2>
+            <h2>iTicket</h2>
             <span>Please fill the fields with your info.<br/></span>
 
         <form action="register_user.php" autocomplete="off" id="UserRegisterForm" method="post" accept-charset="utf-8">
@@ -150,8 +150,8 @@ else
 
       session_start();
 
-      $_SESSION['admin'] = "admin";
-      header('Location: ../dashboard/admin.php'); 
+      $_SESSION["user"] = $email;
+      header('Location: ../dashboard/user.php'); 
   }
 } 
 ?>

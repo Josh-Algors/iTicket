@@ -1,7 +1,7 @@
 <?php
 extract($_POST);
 
-$conn=mysqli_connect('localhost','root','','iTransfer') or die('Could not Connect My Sql:'.mysql_error());
+$conn=mysqli_connect('localhost','root','','iTicket') or die('Could not Connect My Sql:'.mysql_error());
 
 
 if(isset($_POST["btnlogin"]))
@@ -29,9 +29,8 @@ if(isset($_POST["btnlogin"]))
 
             session_start();
 
-            $_SESSION["admin"] = "admin";
-            $_SESSION["email"] = $_POST['email'];
-            header("location: ../dashboard/admin.php"); 
+            $_SESSION["user"] = $email;
+            header("location: ../dashboard/user.php"); 
         }
         else
         {
@@ -63,7 +62,7 @@ mysqli_close($conn);
     <meta name="naver-site-verification" content="">
 
 
-    <title> iTransfer </title>
+    <title> iTicket </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -93,7 +92,7 @@ mysqli_close($conn);
 <style>
     body 
     {
-        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODkzNGI1NjBjNDUwNzA2MmM1YjlhMTU0NGQwMjVhNDFmNGFjMzA3ZiZjdD1n/W6cs6H6vVaPmmJp100/giphy-downsized-large.gif")
+        background-image: url("../backgrd.jpg")
     }
 </style>
 </head>
@@ -126,7 +125,7 @@ mysqli_close($conn);
     <div class="row splash-main">
     
         <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                        <h2>iTransfer</h2>
+                        <h2>iTicket</h2>
                         <span>Please enter your login data <br/></span>
 
             <form  action="" id="UserLoginNowForm" method="post" accept-charset="utf-8">

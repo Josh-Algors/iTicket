@@ -20,7 +20,7 @@ if(isset($_SESSION['login']))
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="index, follow">
-    <meta name="description" content="iTransfer.">
+    <meta name="description" content="iTicket.">
     <meta name="keywords" content="">
 
 
@@ -28,7 +28,7 @@ if(isset($_SESSION['login']))
     <meta name="naver-site-verification" content="">
 
 
-    <title> iTransfer </title>
+    <title> iTicket </title>
 
     <link rel="icon" type="image/jpg" href="../yaba.png">
 
@@ -58,7 +58,7 @@ if(isset($_SESSION['login']))
 <style>
     body 
     {
-        background-image: url("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODkzNGI1NjBjNDUwNzA2MmM1YjlhMTU0NGQwMjVhNDFmNGFjMzA3ZiZjdD1n/W6cs6H6vVaPmmJp100/giphy-downsized-large.gif")
+        background-image: url("")
     }
 </style>
 </head>
