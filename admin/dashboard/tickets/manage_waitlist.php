@@ -12,7 +12,7 @@ if(isset($_SESSION["admin"])) {
 
   $email = $_SESSION['admin'];
 
-  $current_user = mysqli_query($conn,"select * from users where (email='$email' or username='$email')");
+  $current_user = mysqli_query($conn,"select * from admins where (email='$email' or username='$email')");
 
   $user_info = mysqli_fetch_assoc($current_user);
   $user_id = $user_info['id'];
