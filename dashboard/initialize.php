@@ -8,14 +8,10 @@ if(isset($_POST['waitlist_id']))
 {
     $waitlist_id = $_POST['waitlist_id'];
 
-    echo $_POST['waitlist_id'];
-
     $waitlist = mysqli_query($conn,"select * from waitlist_logs where id = " . $waitlist_id . " ORDER BY id DESC");
     $waitlist_info = mysqli_fetch_assoc($waitlist);
 
-
     $_SESSION['waitlist_ticket_id'] = $waitlist_info['ticket_id'];
-    $_SESSION['waitlist_ticket_name'] = $waitlist_info['ticket_name'];
     $_SESSION['waitlist_no_of_people'] = $waitlist_info['no_of_people'];
     $_SESSION['waitlist_payment_status'] = $waitlist_info['payment_status'];
 }
@@ -36,13 +32,19 @@ $email = $_SESSION['user_email'];
 $amount = $ticket_row['ticket_cost'] * 100 * $_SESSION['no_tickets'];  //the amount in kobo. This value is actually NGN 300
 
 $_SESSION['amount'] = $amount;
-$_SESSION['this_email'] = $_SESSION['user_email'];
+$_SESSION['this_email'] = ($_SESSION['user_email']) ?? $_SESSION['user'];
 $_SESSION['ticket_id'] = (isset($_POST['ticket'])) ? $_POST['ticket'] : $waitlist_info['ticket_id'];
 
-if($ticket_row['status'] < $_POST['no_tickets'])
+// echo $_SESSION['no_tickets'];
+// echo $ticket_row['status'];
+// echo $_SESSION['user_email'];
+
+// return "";
+
+if($ticket_row['status'] < $_SESSION['no_tickets'])
 {
-    $no_ticket = $_POST['no_tickets'];
-    $ticket_id = $_POST['ticket'];
+    $no_ticket = $_SESSION['no_tickets'];
+    $ticket_id = $_SESSION['ticket_id'];
     $payment_status = 0;
     $approved = 0;
     $email = $_SESSION['user_email'];

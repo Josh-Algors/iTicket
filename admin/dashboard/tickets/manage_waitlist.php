@@ -21,45 +21,23 @@ if(isset($_SESSION["admin"])) {
     if(isset($_POST['approve']))
     {
         $waitlist_id = $_POST['approve'];
-        mysqli_query($conn,"update waitlist_logs set approved=1 where id = " . $waitlist_id);
+        mysqli_query($conn, "UPDATE waitlist_logs SET approved = 1 WHERE id = " . $waitlist_id);
+        
+        $waitlist_data = mysqli_query($conn,"select * from waitlist_logs where id=" . $waitlist_id);
+        $data = mysqli_num_rows($waitlist_data);
+
+        if($data > 0)
+        {
+            $waitlist_data = mysqli_fetch_array($waitlist_data);
+            mysqli_query($conn, "UPDATE tickets SET status = 10000 WHERE id = " . $waitlist_data['ticket_id']);
+        }
+        
     }
 
 
 
   $username = $user_info['username'];
-  // echo $_SERVER['HTTP_HOST'];
-//   if(isset($_POST['transfer']))
-//   {
 
-//     function generateRandomString($length = 10) 
-//     {
-//       $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-//       $charactersLength = strlen($characters);
-//       $randomString = '';
-
-//       for ($i = 0; $i < $length; $i++)
-//       {
-//         $randomString .= $characters[rand(0, $charactersLength - 1)];
-//       }
-
-//       return $randomString;
-//     }
-
-//     function generateRand($length = 6)
-//     {
-//       $characters = '0123456789';
-//       $charactersLength = strlen($characters);
-//       $randomString = '';
-
-//       for ($i = 0; $i < $length; $i++)
-//       {
-//           $randomString .= $characters[rand(0, $charactersLength - 1)];
-//       }
-
-//       return $randomString;
-//     }
-  
-//   }
 
 ?>
 

@@ -100,7 +100,16 @@ if(isset($_SESSION["admin"])) {
 
                     if(isset($_POST["addTicket"]))
                     {
+                        $ticket_name = $_POST['ticket-name'];
+                        $ticket_type = $_POST['ticket-type'];
+                        $ticket_cost = $_POST['ticket-cost'];
+                        $amount = 10;
+
+                        $query="INSERT INTO `tickets`(`ticket_name`,`ticket_type`,`ticket_cost`, `status`) VALUES('$ticket_name', '$ticket_type', '$ticket_cost', '$amount')";
+                        mysqli_query($conn,$query) or die("Could Not Perform the Query");
+
                         echo "<span> Ticket added Successfully! </span>";
+
                     }
 
                     ?></h4>

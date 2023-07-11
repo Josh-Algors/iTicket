@@ -30,6 +30,7 @@ if(isset($_POST["btnlogin"]))
             session_start();
 
             $_SESSION["user"] = $email;
+            $_SESSION["user_email"] = $data['email'];
             header("location: ../dashboard/user.php"); 
         }
         else

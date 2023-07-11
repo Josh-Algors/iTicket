@@ -10,18 +10,18 @@ if(!isset($_SESSION["user"])){
 }
 if(isset($_SESSION["user"])) {  
 
-  $email = $_SESSION['user'];
-  $va = mysqli_query($conn,"select * from users WHERE `username`='$email' or `email`='$email'");
-  
-  if(mysqli_num_rows($va) < 1){
-    header("Location: ../login/login.php");
-  }
+    $email = $_SESSION['user'];
+    $va = mysqli_query($conn,"select * from users WHERE `username`='$email' or `email`='$email'");
+    
+    if(mysqli_num_rows($va) < 1){
+        header("Location: ../login/login.php");
+    }
 
-  $data = mysqli_fetch_array($va);
+    $data = mysqli_fetch_array($va);
 
-  $username = $data['username'];
-  $email = $data['email'];
-  $user_id = $data['id'];
+    $username = $data['username'];
+    $email = $data['email'];
+    $user_id = $data['id'];
 
 ?>
 

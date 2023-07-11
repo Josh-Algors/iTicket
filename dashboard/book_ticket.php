@@ -18,8 +18,6 @@ else
     $user_query = mysqli_query($conn,"select * from users where (email='$email' or username='$email')");
     $user = mysqli_fetch_assoc($user_query);
 
-    $_SESSION['user_email']  = $user['email'];
-
     $tickets = mysqli_query($conn,"select id, ticket_name, ticket_cost from tickets");
 
 ?>

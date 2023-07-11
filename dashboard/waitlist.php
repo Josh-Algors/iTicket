@@ -10,24 +10,22 @@ if(!isset($_SESSION["user"])){
 }
 if(isset($_SESSION["user"])) {  
 
-  $email = $_SESSION['user'];
+    $email = $_SESSION['user'];
 
-  $current_user = mysqli_query($conn,"select * from users where (email='$email' or username='$email')");
+    $current_user = mysqli_query($conn,"select * from users where (email='$email' or username='$email')");
 
-  $user_info = mysqli_fetch_assoc($current_user);
-  $user_id = $user_info['id'];
+    $user_info = mysqli_fetch_assoc($current_user);
+    $user_id = $user_info['id'];
 
-    if(isset($_POST['waitlist']))
-    {
-        $waitlist_id = $_POST['waitlist'];
+        if(isset($_POST['waitlist']))
+        {
+            $waitlist_id = $_POST['waitlist'];
 
-        // echo $_POST['waitlist'];
-        echo "heeerrrre";
 
-        // return header("Location: /");
-    }
+            // return header("Location: /");
+        }
 
-  $username = $user_info['username'];
+      $username = $user_info['username'];
   // echo $_SERVER['HTTP_HOST'];
 //   if(isset($_POST['transfer']))
 //   {
